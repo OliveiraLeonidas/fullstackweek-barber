@@ -1,21 +1,35 @@
-import Image from "next/image";
-import { Card, CardContent } from "./ui/card";
+"use client"
 import { Button } from "./ui/button";
-import { MenuIcon } from "lucide-react";
+import { Card, CardContent } from "./ui/card";
+import Image from "next/image";
+import {MenuIcon} from "lucide-react";
+import { signIn, useSession, signOut } from "next-auth/react";
 
-const Header = () => (
-    <Card>
-        <CardContent className="px-5 py-6 flex flex-row justify-between items-center">
-            <Image src="Logo.svg" alt="FSW Barber" className="" width={120} height={22} />
-            <Button 
-                variant={"outline"} 
-                size={"icon"}
-                className="h-10 w-10"
-            >
-                <MenuIcon size={20}/>
-            </Button>
-        </CardContent>
-    </Card>
-)
+
+const Header = () => {
+    const {data} = useSession()
+
+    const handlerLoginClick = async () => {
+        await signIn("google");
+    }
+    return (  
+        <Card>
+            <CardContent className="p-5 justify-between items-center flex flex-row">
+        
+            <Image src="/Logo.svg" alt="" height={22} width={120} />
+            
+
+            {/*<Button variant={"outline"} size="icon">
+                <MenuIcon/>
+    </Button>*/}
+            {data?.user ? <div> {<Button onClick={() => signOut()}>Logout</Button>}
+             {data.user.name}</div> : 
+            <Button onClick={handlerLoginClick}>Login</Button>}
+            </CardContent>
+        </Card>
+    );
+}
  
 export default Header;
+
+

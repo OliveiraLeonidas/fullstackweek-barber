@@ -7,8 +7,11 @@ import Image from "next/image";
 interface ServiceItemProps {
     service: Service
 }
-
 const ServiceItem = ({service} : ServiceItemProps) => {
+    const formattedPrice = Intl.NumberFormat('pt-BR', {
+        style: 'currency',
+        currency: 'BRL'
+    }).format(Number(service.price))
     return ( 
         <Card>
             <CardContent className="p-3">

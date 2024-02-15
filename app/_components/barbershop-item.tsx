@@ -1,5 +1,5 @@
 "use client"
-
+{/* No caso do Next todas as pages são server component, desta forma quando temos interatividade precisamos declarar use client na primeira linha */}
 import { Barbershop } from "@prisma/client";
 import { Card, CardContent } from "./ui/card";
 import Image from 'next/image'
@@ -13,6 +13,7 @@ interface BarbershopItemProps {
 }
 
 const BarbershopItem = ({barbershop} : BarbershopItemProps) => {
+    {/* Redireciona para a barbearia que o cliente deseja reservar */}
     const router = useRouter();
     const handleBookingClick = () => {
         router.push(`/barbershops/${barbershop.id}`)
