@@ -1,17 +1,21 @@
 "use client";
 import { Button } from "@/app/_components/ui/button";
 import { Card, CardContent } from "@/app/_components/ui/card";
-import { Barbershop, Service } from "@prisma/client";
+import { Service } from "@prisma/client";
+import { signIn } from "next-auth/react";
 import Image from "next/image";
 
 interface ServiceItemProps {
-    service: Service
+    service: Service;
+    isAuthenticated: boolean
 }
-const ServiceItem = ({service} : ServiceItemProps) => {
-    const formattedPrice = Intl.NumberFormat('pt-BR', {
-        style: 'currency',
-        currency: 'BRL'
-    }).format(Number(service.price))
+const ServiceItem = ({service, isAuthenticated} : ServiceItemProps) => {
+const handleBookClick = () =>{
+    if(!isAuthenticated){
+        return signIn("google")
+    }
+   }
+
     return ( 
         <Card>
             <CardContent className="p-3">
@@ -27,19 +31,20 @@ const ServiceItem = ({service} : ServiceItemProps) => {
                         alt={service.name} 
                         />
                     </div>
+                    <div className="flex"></div>
 
                     <div className="flex flex-col w-full">
                         <h2 className="font-bold">{service.name}</h2>
                         <p className="text-sm text-gray-400"> {service.description}</p>
 
                         <div className="flex items-center justify-between mt-2">
-                            <p className="text-sm font-bold">{Intl.NumberFormat(
+                            <p className="text-sm text-primary font-bold">{Intl.NumberFormat(
                                 "pt-BR", {
                                     style: "currency",
                                     currency: "BRL"
                                 }
                             ).format(Number(service.price))}</p>
-                            <Button variant={"secondary"} className="text-primary">Reservar</Button>
+                            <Button variant={"secondary"} className="text-gray-300" onClick={handleBookClick}>Reservar</Button>
                         </div>
                     </div>
                 </div>
