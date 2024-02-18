@@ -10,7 +10,7 @@ import { auth } from "@/auth";
 export default async function Home() {
   //a home page é um server component, logo é possível acessar o banco
   const session = await auth();
-
+  const user = await db.user.findFirst();
   const [barbershops, confirmedBookings] = await Promise.all([
     db.barbershop.findMany(),
 
@@ -36,7 +36,7 @@ export default async function Home() {
 
       {/* sessao bem vindo */}
       <div className="px-5 py-5 flex flex-col">
-        <h2 className="font-bold text-xl mb-2">Olá, Leonidas</h2>
+        <h2 className="font-bold text-xl mb-2">{"Olá, " + user?.name}</h2>
         <p className="capitalize text-sm">
           {format(new Date(), "EEEE',' dd 'de' MMMM", {
             locale: ptBR,
