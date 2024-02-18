@@ -1,14 +1,35 @@
-import Header from "./_components/header";
+import Header from "../_components/header";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import Search from "./(home)/_components/search";
-import BookingItem from "./_components/booking-item";
-import BarbershopItem from "./_components/barbershop-item";
-import { db } from "./_lib/prisma";
+import Search from "./_components/search";
+import BookingItem from "../_components/booking-item";
+import BarbershopItem from "../_components/barbershop-item";
+import { db } from "../_lib/prisma";
+import { auth } from "@/auth";
 
 export default async function Home() {
   //a home page é um server component, logo é possível acessar o banco
-  const barbershops = await db.barbershop.findMany();
+  const session = await auth();
+
+  const [barbershops, confirmedBookings] = await Promise.all([
+    db.barbershop.findMany(),
+
+    session?.user
+      ? await db.booking.findMany({
+          where: {
+            userId: (session.user as any).id,
+            date: {
+              gte: new Date(),
+            },
+          },
+          include: {
+            service: true,
+            barbershop: true,
+          },
+        })
+      : Promise.resolve([]),
+  ]);
+
   return (
     <div className="">
       <Header />
@@ -36,9 +57,11 @@ export default async function Home() {
         <h2 className="mb-3 uppercase font-bold text-sm text-gray-400">
           Agendamentos
         </h2>
-        {/*
-            <BookingItem booking={barbershops}></BookingItem>
-          */}
+        <div className="flex flex-row gap-3 overflow-x-auto [&::-webkit-scrollbar]:hidden ">
+          {confirmedBookings.map((booking) => (
+            <BookingItem key={booking.id} booking={booking} />
+          ))}
+        </div>
       </div>
 
       <div className="px-5 mt-6">

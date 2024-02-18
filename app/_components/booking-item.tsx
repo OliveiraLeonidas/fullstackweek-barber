@@ -17,7 +17,7 @@ interface BookingItemProps {
 const BookingItem = ({ booking }: BookingItemProps) => {
   const isBookingConfirmed = isFuture(booking.date);
   return (
-    <Card>
+    <Card className="min-w-full">
       <CardContent className="flex py-0 px-0">
         <div className="flex flex-col flex-[3] gap-2 py-3 pl-4">
           <Badge
@@ -26,7 +26,7 @@ const BookingItem = ({ booking }: BookingItemProps) => {
           >
             {isBookingConfirmed ? "Confirmado" : "Finalizado"}
           </Badge>
-          <h2 className="font-bold">{booking.service.name}</h2>
+          <h2 className="font-bold mb-2">{booking.service.name}</h2>
           <div className="flex items-center gap-2">
             <Avatar className="h-7 w-7">
               <AvatarImage src={booking.barbershop.imageUrl}></AvatarImage>
