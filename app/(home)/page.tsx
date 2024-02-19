@@ -36,7 +36,11 @@ export default async function Home() {
 
       {/* sessao bem vindo */}
       <div className="px-5 py-5 flex flex-col">
-        <h2 className="font-bold text-xl mb-2">{"Olá, " + user?.name}</h2>
+        <h2 className="font-bold text-xl mb-2">
+          {session?.user
+            ? `Olá, ${session.user.name?.split(" ")[0]}!`
+            : "Olá, vamos agendar um corte hoje"}
+        </h2>
         <p className="capitalize text-sm">
           {format(new Date(), "EEEE',' dd 'de' MMMM", {
             locale: ptBR,
