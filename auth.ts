@@ -24,6 +24,7 @@ export const {
           id: string;
           name: string;
           email: string;
+          emailVerified: boolean;
         };
       }
       return session;
