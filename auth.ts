@@ -4,6 +4,14 @@ import { db } from "@/app/_lib/prisma";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { Adapter } from "next-auth/adapters";
 
+// Defina os tipos necessários
+interface AdapterUser {
+  id: string;
+  name: string;
+  email: string;
+  emailVerified?: boolean; // Tornar emailVerified opcional
+}
+
 export const {
   handlers: { GET, POST },
   auth,
@@ -20,12 +28,12 @@ export const {
   callbacks: {
     async session({ session, user }) {
       if (user) {
-        session.user = { ...session.user, id: user.id } as {
-          id: string;
-          name: string;
-          email: string;
-          emailVerified: boolean;
-        };
+        // Atribuir o objeto de usuário à session.user
+        session.user = {
+          ...session.user,
+          id: user.id,
+          emailVerified: user.emailVerified, // Adicionar emailVerified se estiver disponível
+        } as AdapterUser; // Use o tipo AdapterUser aqui
       }
       return session;
     },
