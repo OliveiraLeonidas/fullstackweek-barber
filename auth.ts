@@ -2,14 +2,11 @@ import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import { db } from "@/app/_lib/prisma";
 import { PrismaAdapter } from "@auth/prisma-adapter";
-import { Adapter } from "next-auth/adapters";
+import { AdapterUser } from "@auth/core/adapters"; // Importar o tipo AdapterUser do pacote
 
-// Defina os tipos necessários
-interface AdapterUser {
-  id: string;
-  name: string;
-  email: string;
-  emailVerified?: Date | null; // Tornar emailVerified opcional
+// Adicionar a propriedade emailVerified ao tipo AdapterUser
+interface LocalUser extends AdapterUser {
+  emailVerified?: Date | null | undefined;
 }
 
 export const {
@@ -18,7 +15,7 @@ export const {
   signIn,
   signOut,
 } = NextAuth({
-  adapter: PrismaAdapter(db) as Adapter,
+  adapter: PrismaAdapter(db) as any, // Podemos usar "any" temporariamente para contornar problemas de tipo
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID,
@@ -32,8 +29,8 @@ export const {
         session.user = {
           ...session.user,
           id: user.id,
-          emailVerified: user.emailVerified, // Adicionar emailVerified se estiver disponível
-        } as AdapterUser; // Use o tipo AdapterUser aqui
+          emailVerified: user.emailVerified,
+        } as LocalUser; // Use o tipo LocalUser aqui
       }
       return session;
     },
