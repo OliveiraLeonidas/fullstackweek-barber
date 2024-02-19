@@ -11,6 +11,7 @@ export const cancelBooking = async (bookingId: string) => {
     },
   });
 
-  // Revalidate the bookings page after canceling the booking
+  // Revalidate the bookings and source page after canceling the booking
+  revalidatePath("/");
   revalidatePath("/bookings/page");
 };
