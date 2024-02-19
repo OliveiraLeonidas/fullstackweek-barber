@@ -2,12 +2,7 @@ import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import { db } from "@/app/_lib/prisma";
 import { PrismaAdapter } from "@auth/prisma-adapter";
-import { AdapterUser } from "@auth/core/adapters";
-
-// Criar uma nova interface que inclua todas as propriedades de AdapterUser
-interface ExtendedAdapterUser extends AdapterUser {
-  emailVerified?: Date | null | undefined;
-}
+import { Adapter } from "next-auth/adapters";
 
 export const {
   handlers: { GET, POST },
@@ -15,7 +10,7 @@ export const {
   signIn,
   signOut,
 } = NextAuth({
-  adapter: PrismaAdapter(db) as any,
+  adapter: PrismaAdapter(db) as Adapter,
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID,
@@ -25,12 +20,12 @@ export const {
   callbacks: {
     async session({ session, user }) {
       if (user) {
-        // Atribuir o objeto de usuário à session.user
-        session.user = {
-          ...session.user,
-          id: user.id,
-          emailVerified: user.emailVerified,
-        } as ExtendedAdapterUser; // Use a nova interface aqui
+        session.user = { ...session.user, id: user.id } as {
+          id: string;
+          name: string;
+          email: string;
+          emailVerified: Date | null;
+        };
       }
       return session;
     },
