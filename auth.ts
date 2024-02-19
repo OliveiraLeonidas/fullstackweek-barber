@@ -9,7 +9,7 @@ interface AdapterUser {
   id: string;
   name: string;
   email: string;
-  emailVerified?: boolean; // Tornar emailVerified opcional
+  emailVerified?: Date | null; // Tornar emailVerified opcional
 }
 
 export const {
