@@ -11,24 +11,30 @@ export default async function Home() {
   //a home page é um server component, logo é possível acessar o banco
   const session = await auth();
   const user = await db.user.findFirst();
-  const [barbershops, confirmedBookings] = await Promise.all([
-    db.barbershop.findMany(),
+  const [barbershops, recommendedBarbershops, confirmedBookings] =
+    await Promise.all([
+      db.barbershop.findMany(),
 
-    session?.user
-      ? await db.booking.findMany({
-          where: {
-            userId: (session.user as any).id,
-            date: {
-              gte: new Date(),
+      db.barbershop.findMany({
+        orderBy: {
+          id: "asc",
+        },
+      }),
+      session?.user
+        ? await db.booking.findMany({
+            where: {
+              userId: (session.user as any).id,
+              date: {
+                gte: new Date(),
+              },
             },
-          },
-          include: {
-            service: true,
-            barbershop: true,
-          },
-        })
-      : Promise.resolve([]),
-  ]);
+            include: {
+              service: true,
+              barbershop: true,
+            },
+          })
+        : Promise.resolve([]),
+    ]);
 
   return (
     <div className="">
@@ -91,7 +97,8 @@ export default async function Home() {
         </h2>
 
         <div className="flex gap-4 overflow-x-auto [&::-webkit-scrollbar]:hidden">
-          {barbershops.map((barbershop) => (
+          {/*TODO: implementar ordenação por avaliação de barbearias */}
+          {recommendedBarbershops.map((barbershop) => (
             <div className="min-w-[167px]" key={barbershop.id}>
               <BarbershopItem key={barbershop.id} barbershop={barbershop} />
             </div>
