@@ -50,7 +50,7 @@ export default async function Home() {
       {/* Fim da sessao bem vindo */}
 
       {/* Sessao de busca */}
-      <div className="px-5 py-3">
+      <div className="px-5 py-2">
         <Search />
       </div>
       {/*Fim Sessao de busca */}
@@ -78,7 +78,9 @@ export default async function Home() {
         </h2>
         <div className="flex gap-4 overflow-x-auto [&::-webkit-scrollbar]:hidden">
           {barbershops.map((barbershop) => (
-            <BarbershopItem key={barbershop.id} barbershop={barbershop} />
+            <div className="min-w-[167px] " key={barbershop.id}>
+              <BarbershopItem key={barbershop.id} barbershop={barbershop} />
+            </div>
           ))}
         </div>
       </div>
@@ -90,7 +92,9 @@ export default async function Home() {
 
         <div className="flex gap-4 overflow-x-auto [&::-webkit-scrollbar]:hidden">
           {barbershops.map((barbershop) => (
-            <BarbershopItem key={barbershop.id} barbershop={barbershop} />
+            <div className="min-w-[167px]" key={barbershop.id}>
+              <BarbershopItem key={barbershop.id} barbershop={barbershop} />
+            </div>
           ))}
         </div>
       </div>
